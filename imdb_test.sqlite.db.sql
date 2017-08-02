@@ -42,10 +42,7 @@ SELECT first_name, last_name, id FROM actors WHERE last_name='MacDonald';
 
 SELECT COALESCE(first_name, last_name) FROM actors;
 
-#
-SELECT first_name, last_name, id FROM actors;
-SELECT id, COUNT(id) AS id_count FROM movies GROUP BY id;
+SELECT (first_name || ' ' || last_name) AS full_name, COUNT(first_name || ' ' || last_name) AS occurences FROM actors GROUP BY (first_name || last_name) ORDER BY COUNT(first_name || ' ' || last_name) DESC LIMIT 5;
 
-SELECT actor_id, movie_id, COUNT(actor_id) from roles;
-
-SELECT actors.first_name, actors.last_name, COUNT(roles.actor_id) AS role_count FROM actors LEFT JOIN roles ON actors.id=roles.actor_id;
+# prolific
+SELECT actors.first_name, actors.last_name, COUNT(roles.actor_id) AS role_count FROM actors LEFT JOIN roles ON actors.id=roles.actor_id GROUP BY roles.actor_id ORDER BY COUNT(roles.actor_ID) DESC LIMIT 20;
