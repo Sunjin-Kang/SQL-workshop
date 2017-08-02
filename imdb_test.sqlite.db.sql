@@ -38,11 +38,37 @@ SELECT first_name, COUNT(first_name) AS occurences FROM actors GROUP BY first_na
 SELECT last_name, COUNT(last_name) AS occurences FROM actors GROUP BY last_name ORDER BY COUNT(last_name) DESC LIMIT 10;
 
 #now find the most popular full names
-SELECT first_name, last_name, id FROM actors WHERE last_name='MacDonald';
-
-SELECT COALESCE(first_name, last_name) FROM actors;
-
 SELECT (first_name || ' ' || last_name) AS full_name, COUNT(first_name || ' ' || last_name) AS occurences FROM actors GROUP BY (first_name || last_name) ORDER BY COUNT(first_name || ' ' || last_name) DESC LIMIT 5;
 
 # prolific
 SELECT actors.first_name, actors.last_name, COUNT(roles.actor_id) AS role_count FROM actors LEFT JOIN roles ON actors.id=roles.actor_id GROUP BY roles.actor_id ORDER BY COUNT(roles.actor_ID) DESC LIMIT 20;
+
+SELECT first_name, last_name, COUNT(*) AS role_count FROM actors join roles ON actors.id=roles.actor_id GROUP BY actors.id ORDER BY role_count DESC LIMIT 20;
+
+#bottom of the barrel
+SELECT genre, COUNT(genre) AS num_movies_by_genres FROM movies_genres GROUP BY genre ORDER BY COUNT(genre) ASC;
+
+SELECT genre, COUNT(*) FROM movies_genres JOIN movies ON movies.id = movies_genres.movie_id GROUP BY genre ORDER BY COUNT(*) asc;
+
+#Braveheart
+SELECT first_name, last_name FROM ACTORS
+  INNER JOIN roles ON actors.id = roles.actor_id
+  INNER JOIN movies
+    ON roles.movie_id = movies.id
+    AND movies.name = 'Braveheart'
+    AND movies.year = 1995
+ORDER BY last_name;
+
+#LEAP NOIR
+#List all the directors who directed a "Film-Noir" movie in a leap year (you need #to check that the year is divisible by 4). Your query should return
+#director name, the movie name, and the year, sorted by movie name
+
+SELECT *
+FROM movies AS m
+  INNER JOIN movies_genres AS mg
+    ON m.id = mg.movie_id
+    AND mg.genre = 'Film-Noir'
+      INNER JOIN movies_directors AS md ON m.id = md.movie_id
+      INNER JOIN directors AS d ON md.director_id = d.id
+WHERE year % 4 = 0
+ORDER BY m.name ASC;
